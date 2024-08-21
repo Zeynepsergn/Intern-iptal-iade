@@ -9,12 +9,12 @@ import lombok.NoArgsConstructor;
 import java.io.Serializable;
 
 
+@EqualsAndHashCode(callSuper = true)
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class IadeIslemRequest  {
+public class IadeIslemRequest extends BaseId {
 
-        private Integer odemeId;
         @JsonProperty("Tckn")
         private String tckn;
 }

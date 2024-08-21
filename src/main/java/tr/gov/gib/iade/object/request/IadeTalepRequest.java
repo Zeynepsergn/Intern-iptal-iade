@@ -11,9 +11,9 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class IadeTalepRequest extends BaseId{
 
-    private Integer iadeTalepTur;
-    private Integer iadeTalepDurum;
+    private Short iadeTalepTur;
+    private Short iadeTalepDurum;
     private String iadeAciklama;
-    private Integer mukellefId;
+    private Integer mukellefKullaniciId;
     private String mukellefIban;
 }

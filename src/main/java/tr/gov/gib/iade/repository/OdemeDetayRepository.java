@@ -11,6 +11,7 @@ import java.util.List;
 @Repository
 public interface OdemeDetayRepository extends JpaRepository<OdemeDetay, Integer> {
 
+
     @Query("""
         SELECT o FROM OdemeDetay o
         JOIN FETCH o.mukellefKullaniciId m
@@ -28,4 +29,7 @@ public interface OdemeDetayRepository extends JpaRepository<OdemeDetay, Integer>
 
     @Query("SELECT d FROM OdemeDetay d WHERE d.odemeId.id IN :odemeId")
     List<OdemeDetay> findByOdemeIdIn(@Param("odemeId") List<Integer> odemeId);
+
+    @Query("SELECT o FROM OdemeDetay o WHERE o.odemeId.id = :odemeId")
+    OdemeDetay findByOdemeId(@Param("odemeId") Integer odemeId);
 }

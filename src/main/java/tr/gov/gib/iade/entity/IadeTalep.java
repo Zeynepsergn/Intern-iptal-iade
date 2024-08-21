@@ -15,9 +15,10 @@ import java.time.OffsetDateTime;
 public class IadeTalep {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "iade_talep_id_gen")
-    @SequenceGenerator(name = "iade_talep_id_gen", sequenceName = "iade_talep_iade_talep_id_seq", allocationSize = 1)
+    @SequenceGenerator(name = "iade_talep_id_gen", sequenceName = "iade_talep_id", allocationSize = 1)
     @Column(name = "iade_talep_id", nullable = false)
     private Integer id;
+
 
     @NotNull
     @ManyToOne(fetch = FetchType.LAZY, optional = false)

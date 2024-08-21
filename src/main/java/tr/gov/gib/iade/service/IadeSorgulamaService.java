@@ -10,20 +10,12 @@ import tr.gov.gib.iade.object.response.IadeIslemResponse;
 import java.math.BigDecimal;
 import java.util.List;
 
-public interface IadeIslemService {
+public interface IadeSorgulamaService {
     void processIade(Long iadeTalepId);
 
     GibResponse<List<IadeIslemResponse>> iadeSorgula(IadeIslemRequest request);
 
     GibResponse<List<IadeIslemResponse>> tumIadeSorgula(IadeIslemRequest request);
-    // Yeni metodlar
-    BigDecimal getOdenenBorcMiktariByOdemeId(Integer odemeId);
-
-    MukellefKullanici getMukellefByTckn(String tckn);
-
-    List<Odeme> getOdemeByMukellefId(Integer mukellefId);
-
-    List<OdemeDetay> getOdemeDetayByOdemeList(List<Odeme> odemeler);
 
 
 }

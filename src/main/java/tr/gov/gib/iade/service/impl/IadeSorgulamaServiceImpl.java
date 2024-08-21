@@ -1,4 +1,4 @@
-package tr.gov.gib.iade.service;
+package tr.gov.gib.iade.service.impl;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -13,6 +13,7 @@ import tr.gov.gib.iade.repository.IadeTalepRepository;
 import tr.gov.gib.iade.repository.OdemeDetayRepository;
 import tr.gov.gib.iade.object.request.IadeIslemRequest;
 import tr.gov.gib.iade.object.response.IadeIslemResponse;
+import tr.gov.gib.iade.service.IadeSorgulamaService;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -23,18 +24,18 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
-@Service("IadeIslemService")
-public class IadeIslemServiceImpl implements IadeIslemService {
+@Service("IadeSorgulamaService")
+public class IadeSorgulamaServiceImpl implements IadeSorgulamaService {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(IadeIslemServiceImpl.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(IadeSorgulamaServiceImpl.class);
 
     private final IadeEmanetRepository iadeEmanetRepository;
     private final IadeTalepRepository iadeTalepRepository;
     private final OdemeDetayRepository odemeDetayRepository;
 
-    public IadeIslemServiceImpl(IadeEmanetRepository iadeEmanetRepository,
-                                IadeTalepRepository iadeTalepRepository,
-                                OdemeDetayRepository odemeRepository) {
+    public IadeSorgulamaServiceImpl(IadeEmanetRepository iadeEmanetRepository,
+                                    IadeTalepRepository iadeTalepRepository,
+                                    OdemeDetayRepository odemeRepository) {
         this.iadeEmanetRepository = iadeEmanetRepository;
         this.iadeTalepRepository = iadeTalepRepository;
         this.odemeDetayRepository = odemeRepository;
@@ -130,7 +131,7 @@ public class IadeIslemServiceImpl implements IadeIslemService {
     @Override
     public GibResponse<List<IadeIslemResponse>> iadeSorgula(IadeIslemRequest request) throws GibException {
         try {
-            List<IadeTalep> iadeTalepleri = iadeTalepRepository.findIadeTalepsByTcknAndOdemeId(request.getTckn(), request.getOdemeId());
+            List<IadeTalep> iadeTalepleri = iadeTalepRepository.findIadeTalepsByTcknAndOdemeId(request.getTckn(), request.getId());
             List<IadeIslemResponse> responses = new ArrayList<>();
             iadeResponseOlustur(iadeTalepleri, responses);
 
@@ -157,46 +158,6 @@ public class IadeIslemServiceImpl implements IadeIslemService {
         } catch (Exception e) {
             throw new GibException(ServiceMessage.NO_OK, e.getMessage());
         }
-    }
-
-    @Override
-    public BigDecimal getOdenenBorcMiktariByOdemeId(Integer odemeId) {
-        List<OdemeDetay> odemeDetayList = odemeDetayRepository.findByOdemeIdIn(Collections.singletonList(odemeId));
-
-        if (odemeDetayList.isEmpty()) {
-            // Hata yönetimi yapılabilir
-            LOGGER.warn("OdemeDetay bulunamadı, ID: {}", odemeId);
-            return null;
-        }
-
-        // İlk OdemeDetay nesnesini alıyoruz
-        OdemeDetay odemeDetay = odemeDetayList.get(0);
-        Odeme odeme = odemeDetay.getOdemeId();
-
-        // Ödeme detayından borç miktarını alıyoruz
-        return odeme.getMukellefBorcId().getKalanBorc();
-    }
-
-
-
-    @Override
-    public MukellefKullanici getMukellefByTckn(String tckn) {
-        return getMukellefByTckn(tckn);
-    }
-
-
-    @Override
-    public List<Odeme> getOdemeByMukellefId(Integer mukellefId) {
-        return getOdemeByMukellefId(mukellefId);
-    }
-
-    @Override
-    public List<OdemeDetay> getOdemeDetayByOdemeList(List<Odeme> odemeler) {
-        List<Integer> odemeIds = new ArrayList<>();
-        for (Odeme odeme : odemeler) {
-            odemeIds.add(odeme.getId());
-        }
-        return odemeDetayRepository.findByOdemeIdIn(odemeIds);
     }
 
 
