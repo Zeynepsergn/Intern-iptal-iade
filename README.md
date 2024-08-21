@@ -18,7 +18,7 @@ PostgreSQL : 14
 --------------------------
 
 <pre>
-DB_URL=jdbc:postgresql://localhost:5432/gib_staj;
+DB_URL=jdbc:postgresql://10.251.34.33:5432/gib_staj;
 DB_USER=postgres;
 DB_PASS=123456;
 PORT=7050;

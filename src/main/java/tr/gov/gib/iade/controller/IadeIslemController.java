@@ -5,14 +5,14 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import tr.gov.gib.gibcore.object.response.GibResponse;
-import tr.gov.gib.gibcore.object.reuest.GibRequest;
+import tr.gov.gib.gibcore.object.request.GibRequest;
 import tr.gov.gib.iade.object.request.IadeIslemRequest;
 import tr.gov.gib.iade.object.request.IadeTalepRequest;
 import tr.gov.gib.iade.object.response.IadeIslemResponse;
 import tr.gov.gib.iade.service.IadeEdilebileceklerService;
 import tr.gov.gib.iade.service.IadeSorgulamaService;
 import tr.gov.gib.iade.service.IadeTalepService;
-import tr.gov.gib.iade.service.impl.IadeTalepOlusturmaService;
+import tr.gov.gib.iade.service.impl.IadeTalepOlusturmaServiceImpl;
 
 
 import java.util.Collections;
@@ -26,13 +26,13 @@ public class IadeIslemController {
     private final IadeSorgulamaService iadeSorgulamaService;
     private final IadeTalepService iadeTalepService;
     private final IadeEdilebileceklerService iadeEdilebileceklerService;
-    private final IadeTalepOlusturmaService iadeTalepOlusturmaService;
+    private final IadeTalepOlusturmaServiceImpl iadeTalepOlusturmaServiceImpl;
 
-    public IadeIslemController(IadeSorgulamaService iadeSorgulamaService, IadeTalepService iadeTalepService, IadeEdilebileceklerService iadeEdilebileceklerService, IadeTalepOlusturmaService iadeTalepOlusturmaService) {
+    public IadeIslemController(IadeSorgulamaService iadeSorgulamaService, IadeTalepService iadeTalepService, IadeEdilebileceklerService iadeEdilebileceklerService, IadeTalepOlusturmaServiceImpl iadeTalepOlusturmaServiceImpl) {
         this.iadeSorgulamaService = iadeSorgulamaService;
         this.iadeTalepService = iadeTalepService;
         this.iadeEdilebileceklerService = iadeEdilebileceklerService;
-        this.iadeTalepOlusturmaService = iadeTalepOlusturmaService;
+        this.iadeTalepOlusturmaServiceImpl = iadeTalepOlusturmaServiceImpl;
     }
 
 
@@ -46,7 +46,7 @@ public class IadeIslemController {
     @PostMapping("/iadeTalebiOlustur")
     public ResponseEntity<GibResponse> iadeTalebiOlustur (@RequestBody GibRequest<IadeTalepRequest> request) {
         IadeTalepRequest requestData = request.getData();
-        GibResponse response = iadeTalepOlusturmaService.iadeTalebiOlustur(requestData);
+        GibResponse response = iadeTalepOlusturmaServiceImpl.iadeTalebiOlustur(requestData);
 
         if ("Ödeme detayı bulunamadı.".equals(response.getMessage())) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
@@ -64,11 +64,9 @@ public class IadeIslemController {
         if (iadeTalepRequest.getIadeTalepDurum() == null) {
             return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
         }
-
         GibResponse response = iadeTalepService.iadeTalebiOnayla(iadeTalepRequest);
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
-
 
 
     @PostMapping("/iadeSorgula")

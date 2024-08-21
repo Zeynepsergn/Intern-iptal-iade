@@ -1,7 +1,7 @@
 package tr.gov.gib.iade.service;
 
 import tr.gov.gib.gibcore.object.response.GibResponse;
-import tr.gov.gib.gibcore.object.reuest.GibRequest;
+import tr.gov.gib.gibcore.object.request.GibRequest;
 import tr.gov.gib.iade.entity.MukellefKullanici;
 import tr.gov.gib.iade.entity.Odeme;
 import tr.gov.gib.iade.entity.OdemeDetay;

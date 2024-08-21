@@ -1,9 +1,9 @@
 <component name="ProjectRunConfigurationManager">
   <configuration default="false" name="IadeServisApplication" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot" nameIsGenerated="true">
     <envs>
-      <env name="DB_PASS" value="123456" />
-      <env name="DB_URL" value="jdbc:postgresql://localhost:5432/gib_staj" />
+      <env name="DB_URL" value="jdbc:postgresql://10.251.34.33:5432/gib_staj" />
       <env name="DB_USER" value="postgres" />
+      <env name="DB_PASS" value="123456" />
       <env name="PORT" value="7050" />
     </envs>
     <option name="FRAME_DEACTIVATION_UPDATE_POLICY" value="UpdateClassesAndResources" />

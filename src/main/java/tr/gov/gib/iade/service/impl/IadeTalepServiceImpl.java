@@ -1,5 +1,6 @@
 package tr.gov.gib.iade.service.impl;
 
+import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 import tr.gov.gib.gibcore.object.response.GibResponse;
 import tr.gov.gib.gibcore.util.ServiceMessage;
@@ -10,6 +11,7 @@ import tr.gov.gib.iade.repository.IadeTalepRepository;
 import tr.gov.gib.iade.service.IadeTalepService;
 
 @Service("IadeTalepService")
+@Transactional
 public class IadeTalepServiceImpl implements IadeTalepService {
 
     private final IadeTalepRepository iadeTalepRepository;
