@@ -6,6 +6,7 @@ import lombok.Setter;
 
 import java.math.BigDecimal;
 import java.time.OffsetDateTime;
+import java.util.List;
 
 @Getter
 @Setter
@@ -25,6 +26,9 @@ public class MukellefBorc {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "mukellef_kullanici_id")
     private MukellefKullanici mukellefKullaniciId;
+
+    @OneToMany
+    private List<Odeme> odemes;
 
     @Column(name = "mukellef_borc", precision = 10, scale = 2)
     private BigDecimal mukellefBorc;

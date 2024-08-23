@@ -38,8 +38,7 @@ public class IadeIslemController {
 
     @PostMapping("/iadeEdilebilecekOdemeSorgula")
     public ResponseEntity<GibResponse> iadeEdilebilecekOdemeSorgula(@RequestBody GibRequest<IadeIslemRequest> request) {
-        IadeIslemRequest iadeIslemRequest = request.getData();
-        GibResponse response = iadeEdilebileceklerService.getMukellefByTckn(iadeIslemRequest);
+        GibResponse response = iadeEdilebileceklerService.getMukellefByTckn(request);
         return new ResponseEntity<>(response, response.getStatus() ? HttpStatus.OK : HttpStatus.BAD_REQUEST);
     }
 
@@ -51,7 +50,6 @@ public class IadeIslemController {
         if ("Ödeme detayı bulunamadı.".equals(response.getMessage())) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
         }
-
         return ResponseEntity.ok(response);
     }
 
@@ -59,11 +57,6 @@ public class IadeIslemController {
     @PostMapping("/iadeTalebiOnayla")
     public ResponseEntity<GibResponse> iadeTalebiOnayla(@RequestBody GibRequest<IadeTalepRequest> request) {
         IadeTalepRequest iadeTalepRequest = request.getData();
-
-        // iadeTalepRequest'in geçerli olup olmadığını kontrol edin
-        if (iadeTalepRequest.getIadeTalepDurum() == null) {
-            return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
-        }
         GibResponse response = iadeTalepService.iadeTalebiOnayla(iadeTalepRequest);
         return new ResponseEntity<>(response, HttpStatus.OK);
     }

@@ -14,15 +14,15 @@ public interface IadeEdilebileceklerService {
 
     GibResponse getMukellefByTcknn(GibRequest<IadeIslemRequest> request);
 
-    BigDecimal getOdenenBorcMiktariByOdemeId(Integer odemeId);
+    OdemeDetay getOdenenBorcMiktariByOdemeId(Integer odemeId);
 
-    MukellefKullanici getMukellefByTckn(String tckn);
+    List<OdemeDetay> getOdemeDetayByTckn(String tckn);
 
     List<Odeme> getOdemeByMukellefId(Integer mukellefId);
 
     List<OdemeDetay> getOdemeDetayByOdemeList(List<Odeme> odemeler);
 
-    GibResponse getMukellefByTckn(IadeIslemRequest iadeIslemRequest);
+    GibResponse getMukellefByTckn(GibRequest<IadeIslemRequest> iadeIslemRequest);
 
 
 

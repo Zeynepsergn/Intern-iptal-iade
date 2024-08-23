@@ -23,7 +23,6 @@ public class Odeme {
     @JoinColumn(name = "mukellef_borc_id")
     private MukellefBorc mukellefBorcId;
 
-
     @NotNull
     @Column(name = "optime", nullable = false)
     private OffsetDateTime optime;
@@ -33,8 +32,14 @@ public class Odeme {
     private Short odemeDurum;
 
     @NotNull
-    @Column(name = "vergi_tur_id", nullable = false)
-    private Short vergiTurId;
+    @Column(name = "vergi_id", nullable = false)
+    private Short vergiId;
+
+    @NotNull
+    @Column(name = "mukellef_kullanici_id", nullable = false)
+    private Long mukellefKullaniciId;
+
+
 
 
 

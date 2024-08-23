@@ -24,7 +24,4 @@ public class VergiOdemeTur {
     @NotNull
     @Column(name = "vergi_odeme_tur" , nullable = false)
     private Short vergiOdemeTur;
-
-
-
 }

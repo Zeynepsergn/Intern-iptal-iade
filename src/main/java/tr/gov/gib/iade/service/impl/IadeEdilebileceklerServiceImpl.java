@@ -1,15 +1,20 @@
 package tr.gov.gib.iade.service.impl;
 
+import org.apache.commons.lang3.ObjectUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import tr.gov.gib.gibcore.exception.GibException;
 import tr.gov.gib.gibcore.object.response.GibResponse;
 import tr.gov.gib.gibcore.object.request.GibRequest;
+import tr.gov.gib.gibcore.util.ServiceMessage;
+import tr.gov.gib.iade.entity.MukellefBorc;
 import tr.gov.gib.iade.entity.MukellefKullanici;
 import tr.gov.gib.iade.entity.Odeme;
 import tr.gov.gib.iade.entity.OdemeDetay;
 import tr.gov.gib.iade.object.request.IadeIslemRequest;
+import tr.gov.gib.iade.object.response.IadeSorgulaResponse;
 import tr.gov.gib.iade.repository.OdemeDetayRepository;
 import tr.gov.gib.iade.service.IadeEdilebileceklerService;
 
@@ -34,76 +39,101 @@ public class IadeEdilebileceklerServiceImpl implements IadeEdilebileceklerServic
 
     @Override
     public GibResponse getMukellefByTcknn(GibRequest<IadeIslemRequest> request) {
-        GibResponse response = new GibResponse();
 
         if (request == null || request.getData() == null) {
-            response.setStatus(false);
-            response.setMessage("Request veya veriler null.");
-            return response;
+            return GibResponse.builder().status(false).message("Request boş olamaz!").build();
         }
 
         IadeIslemRequest requestData = request.getData();
 
         try {
+
             if (requestData.getId() != null) {
-                // OdemeId ile ödemeyi sorgula
-                BigDecimal odenenBorcMiktari = getOdenenBorcMiktariByOdemeId(requestData.getId());
+                OdemeDetay odemeDetay = getOdenenBorcMiktariByOdemeId(requestData.getId());
+                if(odemeDetay == null)
+                    return GibResponse.builder().status(false).message("Ödeme bulunamadı.").build();
 
-                if (odenenBorcMiktari != null) {
-                    response.setStatus(true);
-                    response.setData(odenenBorcMiktari);
-                    response.setMessage("Başarılı"); // Başarı durumunda mesaj ayarla
-                } else {
-                    response.setStatus(false);
-                    response.setMessage("Ödeme bulunamadı.");
-                }
-            } else if (requestData.getTckn() != null && !requestData.getTckn().isEmpty()) {
+                Odeme odeme = odemeDetay.getOdemeId();
+                MukellefBorc borc = odeme.getMukellefBorcId();
+                MukellefKullanici mukellef = odemeDetay.getMukellefKullaniciId();
+
+                IadeSorgulaResponse sorgulaRes = IadeSorgulaResponse
+                        .builder()
+                        .borcId(borc.getId())
+                        .odemeId(odeme.getId())
+                        .ad(mukellef.getMukellefAd())
+                        .soyad(mukellef.getMukellefSoyad())
+                        .tckn(mukellef.getTckn())
+                        .unvan(mukellef.getMukellefUnvan())
+                        .oid(odemeDetay.getOid())
+                        .tutar(odemeDetay.getOdenenBorcMiktari())
+                        .build();
+
+                return GibResponse
+                        .builder()
+                        .service(ServiceMessage.OK)
+                        .data(Collections.singletonList(sorgulaRes))
+                        .build();
+
+            }
+            else if (!ObjectUtils.isEmpty(requestData.getTckn())) {
                 // Tckn ile mükellefi ve ödemeyi sorgula
-                MukellefKullanici mukellef = getMukellefByTckn(requestData.getTckn());
+                List<OdemeDetay> odemeDetays = getOdemeDetayByTckn(requestData.getTckn());
+                if(odemeDetays.isEmpty())
+                    return GibResponse.builder().status(false).message("Ödeme bulunamadı.").build();
 
-                if (mukellef != null) {
-                    List<Odeme> odemeler = getOdemeByMukellefId(mukellef.getId());
-                    List<OdemeDetay> odemeDetaylari = getOdemeDetayByOdemeList(odemeler);
+                List<IadeSorgulaResponse> sorgulaResList = new ArrayList<>();
+                for(OdemeDetay odemeDetay : odemeDetays){
+                    Odeme odeme = odemeDetay.getOdemeId();
+                    MukellefBorc borc = odemeDetay.getOdemeId().getMukellefBorcId();
+                    MukellefKullanici mukellef = odemeDetay.getMukellefKullaniciId();
 
-                    response.setStatus(true);
-                    response.setData(odemeDetaylari);
-                    response.setMessage("Başarılı"); // Başarı durumunda mesaj ayarla
-                } else {
-                    response.setStatus(false);
-                    response.setMessage("Mükellef bulunamadı.");
+                    IadeSorgulaResponse sorgulaRes = IadeSorgulaResponse
+                            .builder()
+                            .borcId(borc.getId())
+                            .odemeId(odeme.getId())
+                            .ad(mukellef.getMukellefAd())
+                            .soyad(mukellef.getMukellefSoyad())
+                            .tckn(mukellef.getTckn())
+                            .unvan(mukellef.getMukellefUnvan())
+                            .oid(odemeDetay.getOid())
+                            .tutar(odemeDetay.getOdenenBorcMiktari())
+                            .build();
+
+                    sorgulaResList.add(sorgulaRes);
                 }
-            } else {
-                response.setStatus(false);
-                response.setMessage("Geçersiz parametreler.");
+
+                return GibResponse
+                        .builder()
+                        .service(ServiceMessage.OK)
+                        .data(sorgulaResList)
+                        .build();
+            }
+            else {
+                return GibResponse.builder().status(false).message("Geçersiz parametreler.").build();
             }
         } catch (Exception e) {
-            response.setStatus(false);
-            response.setMessage("Bir hata oluştu: " + e.getMessage());
+            throw new GibException(ServiceMessage.FAIL, "Odeme bilgileri getirilirken hata oluştu.");
         }
-
-        return response;
     }
 
 
     @Override
-    public BigDecimal getOdenenBorcMiktariByOdemeId(Integer odemeId) {
-        List<OdemeDetay> odemeDetayList = odemeDetayRepository.findByOdemeIdIn(Collections.singletonList(odemeId));
+    public OdemeDetay getOdenenBorcMiktariByOdemeId(Integer odemeId) {
+        OdemeDetay odemeDetay = odemeDetayRepository.findByOdemeId(odemeId);
 
-        if (odemeDetayList.isEmpty()) {
+        if (odemeDetay == null) {
             LOGGER.warn("OdemeDetay bulunamadı, ID: {}", odemeId);
             return null;
         }
-
-        OdemeDetay odemeDetay = odemeDetayList.get(0);
-        Odeme odeme = odemeDetay.getOdemeId();
-
-        return odeme.getMukellefBorcId().getKalanBorc();
+        return odemeDetay;
     }
 
     @Override
-    public MukellefKullanici getMukellefByTckn(String tckn) {
+    public List<OdemeDetay> getOdemeDetayByTckn(String tckn) {
         // Gerekli sorgulama işlemleri burada yapılacak
-        return getMukellefByTckn(tckn);
+        //return getMukellefByTckn(tckn);
+        return odemeDetayRepository.findOdemeDetaysByTckn(tckn);
     }
 
     @Override
@@ -123,10 +153,8 @@ public class IadeEdilebileceklerServiceImpl implements IadeEdilebileceklerServic
     }
 
     @Override
-    public GibResponse getMukellefByTckn(IadeIslemRequest iadeIslemRequest) {
-        GibRequest<IadeIslemRequest> request = new GibRequest<>();
-        request.setData(iadeIslemRequest);
-        return getMukellefByTcknn(request);
+    public GibResponse getMukellefByTckn(GibRequest<IadeIslemRequest> iadeIslemRequest) {
+        return getMukellefByTcknn(iadeIslemRequest);
     }
 
 

@@ -6,6 +6,8 @@ import jakarta.validation.constraints.Size;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.util.List;
+
 @Getter
 @Setter
 @Entity
@@ -24,7 +26,7 @@ public class MukellefKullanici {
 
     @Size(max = 10)
     @NotNull
-    @Column(name = "vkn", length = 10 , nullable = false)
+    @Column(name = "vergikn", length = 10 , nullable = false)
     private String vkn;
 
     @Size(max = 100)
@@ -41,5 +43,8 @@ public class MukellefKullanici {
     @NotNull
     @Column(name = "mukellef_unvan", length = 100 , nullable = false)
     private String mukellefUnvan;
+
+    @OneToMany
+    private List<MukellefBorc> mukellefBorcs;
 
 }

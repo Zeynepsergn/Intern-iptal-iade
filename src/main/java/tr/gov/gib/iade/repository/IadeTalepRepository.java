@@ -24,6 +24,7 @@ public interface IadeTalepRepository extends JpaRepository<IadeTalep, Integer> {
     @Query("""
         SELECT m FROM IadeTalep m
         JOIN FETCH m.mukellefKullaniciId k
+        JOIN FETCH m.odemeId o
         WHERE k.tckn = :tckn
     """)
     List<IadeTalep> findIadeTalepsByTckn(@Param("tckn") String tckn);
