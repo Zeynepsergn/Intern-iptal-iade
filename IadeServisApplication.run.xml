@@ -1,10 +1,16 @@
 <component name="ProjectRunConfigurationManager">
   <configuration default="false" name="IadeServisApplication" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot" nameIsGenerated="true">
     <envs>
-      <env name="_URL" value="jdbc:postgresql://localhost:5432/gib_staj" />
-      <env name="DB_PASS" value="123456" />
+      <env name="DB_URL" value="jdbc:postgresql://10.251.34.33:5432/gib_staj" />
       <env name="DB_USER" value="postgres" />
+      <env name="DB_PASS" value="123456" />
       <env name="PORT" value="7050" />
+      <env name="SWAGGER_TITLE" value="Iade Service" />
+      <env name="SWAGGER_VERSION" value="1.0" />
+      <env name="SWAGGER_DSC" value="Iade service ile ilgili islemleri yapan servistir" />
+      <env name="SWAGGER_TOS" value="https://gib.gov.tr" />
+      <env name="SWAGGER_NAME" value="Busra Evin" />
+      <env name="SWAGGER_EMAIL" value="busra.evin@gelirler.gov.tr" />
     </envs>
     <option name="FRAME_DEACTIVATION_UPDATE_POLICY" value="UpdateClassesAndResources" />
     <module name="IadeServis.main" />

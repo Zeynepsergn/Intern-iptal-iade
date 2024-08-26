@@ -9,6 +9,7 @@ import tr.gov.gib.iade.entity.Odeme;
 import tr.gov.gib.iade.object.request.IadeTalepRequest;
 import tr.gov.gib.iade.object.response.IadeTalepResponse;
 import tr.gov.gib.iade.repository.IadeTalepRepository;
+import tr.gov.gib.iade.repository.VergiOdemeTurRepository;
 import tr.gov.gib.iade.service.IadeTalepService;
 
 import java.time.Duration;
@@ -20,9 +21,11 @@ import java.time.OffsetDateTime;
 public class IadeTalepServiceImpl implements IadeTalepService {
 
     private final IadeTalepRepository iadeTalepRepository;
+    private final VergiOdemeTurRepository vergiOdemeTurRepository;
 
-    public IadeTalepServiceImpl(IadeTalepRepository iadeTalepRepository) {
+    public IadeTalepServiceImpl(IadeTalepRepository iadeTalepRepository, VergiOdemeTurRepository vergiOdemeTurRepository) {
         this.iadeTalepRepository = iadeTalepRepository;
+        this.vergiOdemeTurRepository = vergiOdemeTurRepository;
     }
 
     @Override
@@ -48,7 +51,8 @@ public class IadeTalepServiceImpl implements IadeTalepService {
 
         // iadeTalepTur ve odemeTur kontrolleri
         String iadeTalepTur = iadeTalep.getIadeTalepTur().toString();
-        String odemeTur = odeme.getVergiId().toString();
+        String odemeTur = vergiOdemeTurRepository.findVergiOdemeTurByVergiId(odeme.getVergiId()).toString();
+
 
         switch (iadeTalepTur) {
             case "0": // Dilekçe ile sadece nakit ödemeler için

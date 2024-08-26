@@ -38,9 +38,4 @@ public class Odeme {
     @NotNull
     @Column(name = "mukellef_kullanici_id", nullable = false)
     private Long mukellefKullaniciId;
-
-
-
-
-
 }
