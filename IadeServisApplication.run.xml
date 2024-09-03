@@ -13,7 +13,7 @@
       <env name="SWAGGER_EMAIL" value="busra.evin@gelirler.gov.tr" />
     </envs>
     <option name="FRAME_DEACTIVATION_UPDATE_POLICY" value="UpdateClassesAndResources" />
-    <module name="IadeServis.main" />
+    <module name="iade-service.main" />
     <option name="SPRING_BOOT_MAIN_CLASS" value="tr.gov.gib.iade.IadeServisApplication" />
     <method v="2">
       <option name="Make" enabled="true" />
